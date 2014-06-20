@@ -1,2 +1,3 @@
-dutch-text-classification
+Dutch Text Classification
 =========================
+
