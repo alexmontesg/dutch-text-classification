@@ -11,8 +11,6 @@ import xlrd
 import os.path
 import nltk
 from nltk.classify import apply_features
-from nltk.corpus import stopwords
-import string
 from nltk.collocations import BigramCollocationFinder
 from nltk.metrics import BigramAssocMeasures
 
@@ -33,19 +31,15 @@ def document_features(document):
     return features
 
 # Path to excel file
-wb = xlrd.open_workbook(os.path.join('/home/TUE/amontes/Dropbox/alejandro-julia/Database/notary_acts_19062014 - classified.xlsx'))
+wb = xlrd.open_workbook(os.path.join('/home/TUE/amontes/Dropbox/alejandro-julia/Database/notary_acts_19062014 - classified - no_stop_words_names.xlsx'))
 
 sh = wb.sheet_by_index(0)
 documents = []
 
-# Exclude punctuation symbols
-exclude = set(string.punctuation)
-
-# For every registry in the file the text is extracted and put into an array separating documents that are classified or need to be classified
+# For every registry in the file the text is extracted and put into an array
 for i in range(1, sh.nrows):
     text = sh.cell(i, 1).value
     category = sh.cell(i, 0).value
-    text = ''.join(ch for ch in text if ch not in exclude)
     documents.append((text.lower(), category))
 
 # Shuffle the documents so that the order in which they are in the excel file does not affect the results
@@ -55,7 +49,7 @@ all_words = []
 for d in documents:
     words = []
     for word in d[0].split():
-        if(len(word) > 1 and not word in stopwords.words('dutch')):
+        if(len(word) > 1):
             words.append(word)
     all_words += words + getBigrams(words)
 
